@@ -13,7 +13,15 @@ configure_file(cl/stabilizer_kernel.cl cl/stabilizer_kernel.cl)
 # PATHS /usr/local 
 # NO_DEFAULT_PATH)
 
-include_directories(/usr/local/include/eigen3)
+find_package(Eigen3)
+if(NOT EIGEN3_FOUND)
+  find_package(cmake_modules REQUIRED)
+  find_package(Eigen REQUIRED)
+  set(EIGEN3_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
+  set(EIGEN3_LIBRARIES ${EIGEN_LIBRARIES})
+else()
+  set(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+endif()
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -134,6 +142,7 @@ catkin_package(
 include_directories(
 include
   ${catkin_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
